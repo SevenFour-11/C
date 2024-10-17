@@ -1,162 +1,225 @@
-#define _CRT_SECURE_NO_WARNINGS 1//½ûÓÃvsµÄ°²È«ĞÔ¾¯¸æ
+#define _CRT_SECURE_NO_WARNINGS 1
 #include "game.h"
-void InitContact(Contact* pc) //³õÊ¼»¯Í¨Ñ¶Â¼
+void InitContact(Contact* pc) 
 {
-	assert(pc);//·ÀÖ¹¿ÕÖ¸Õë
-	pc->sz = 0;//½«sz³õÊ¼»¯Îª0
-	memset(pc->data, 0, sizeof(pc->data));//Êı×éÃû£¬Ìæ»»£¬Ìæ»»Êı
+    assert(pc);
+    pc->sz = 0;
+    memset(pc->data, 0, sizeof(pc->data));
 }
-//Ôö¼ÓÁªÏµÈË
 void AddContact(Contact* pc)
 {
-	assert(pc);//·ÀÖ¹¿ÕÖ¸Õë
-	if (pc->sz == MAX)//±íÊ¾Í¨Ñ¶Â¼½á¹¹ÌåµÄ¿ª±ÙµÄ¿Õ¼äÂúÁË
-	{
-		printf("Í¨Ñ¶Â¼ÒÑÂú£¬ÎŞ·¨Ôö¼Ó\n");
-		return;
-	}
-	//Í¨Ñ¶Â¼Ã»ÓĞÂú¾ÍÊäÈë
-	else
-	{
-		printf("ÇëÊäÈëÃû×Ö£º");
-		scanf("%s", pc->data[pc->sz].name);
-		printf("ÇëÊäÈëÄêÁä£º");
-		scanf("%d", &(pc->data[pc->sz].age));
-		printf("ÇëÊäÈëĞÔ±ğ£º");
-		scanf("%s", pc->data[pc->sz].sex);
-		printf("ÇëÊäÈëµç»°£º");
-		scanf("%s", pc->data[pc->sz].tele);
-		printf("ÇëÊäÈëµØÖ·£º");
-		scanf("%s", pc->data[pc->sz].addr);
-		pc->sz++;//Ò»¸ö½á¹¹ÌåÊı¾İÌîÂúºó£¬¾ÍÔÚ¼ÌĞøÌî³äÏÂÒ»¸ö
-		printf("Ôö¼Ó³É¹¦\n");
-	}
+    assert(pc);
+    if (pc->sz == MAX)
+    {
+        printf("Address book is full, unable to add more.\n");
+        return;
+    } 
+    else
+    {
+        printf("Please enter the nameï¼š");
+        scanf("%s", pc->data[pc->sz].name);
+        printf("Please enter the ageï¼š");
+        scanf("%d", &(pc->data[pc->sz].age));
+        printf("Please enter the genderï¼š");
+        scanf("%s", pc->data[pc->sz].sex);
+        printf("Please enter the phone numberï¼š");
+        scanf("%s", pc->data[pc->sz].tele);
+        printf("Please enter the addressï¼š");
+        scanf("%s", pc->data[pc->sz].addr);
+        pc->sz++;
+        printf("Increase successful.\n");
+    }
 }
-//´òÓ¡ËùÓĞÁªÏµÈË
 void ShowContact(Contact* pc)
 {
-	assert(pc);//·ÀÖ¹¿ÕÖ¸Õë
-	if (pc->sz == 0)//¼ì²észÊÇ·ñÊÇÖ¸Ïò¿ªÍ·
-	{
-		printf("Í¨Ñ¶Â¼Îª¿Õ£¬ÎŞĞè´òÓ¡\n");
-		return;
-	}
-	int i = 0;
-	printf("%-20s%-5s%-5s%-12s%-30s%\n", "Ãû×Ö", "ÄêÁä", "ĞÔ±ğ", "µç»°", "µØÖ·");
-	for (i = 0; i < pc->sz; i++)
-	{
-		printf("%-20s%-5d%-5s%-12s%-30s%\n", pc->data[i].name, pc->data[i].age, pc->data[i].sex, pc->data[i].tele, pc->data[i].addr);
-	}
+    assert(pc);
+    if (pc->sz == 0)
+    {
+        printf("Address book is empty, no need to print.\n");
+        return;
+    }
+    int i = 0;
+    printf("%-20s%-5s%-5s%-12s%-30s%\n", "name", "age", "gender", "phone number", "address");
+    for (i = 0; i < pc->sz; i++)
+    {
+        printf("%-20s%-5d%-5s%-12s%-30s%\n", pc->data[i].name, pc->data[i].age, pc->data[i].sex, pc->data[i].tele, pc->data[i].addr);
+    }
 }
 static int FindByName(Contact* pc, char name[])
 {
-	assert(pc);//·ÀÖ¹¿ÕÖ¸Õë
-	int i = 0;
-	for (i = 0; i < pc->sz; i++)
-	{
-		if (strcmp(pc->data[i].name, name) == 0)//¶Ô±ÈÊı¾İÊÇ·ñÏàÍ¬£¬Èç¹ûÏàÍ¬¾Í·µ»Ø¸ÃÖ¸ÕëµÄÖ¸ÏòÊı¾İ£¬²»ÏàÍ¬¾Í·µ»Ø-1
-		{
-			return i;
-		}
-	}
-	return -1;
+    assert(pc);
+    int i = 0;
+    for (i = 0; i < pc->sz; i++)
+    {
+        if (strcmp(pc->data[i].name, name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
-//É¾³ıÖ¸¶¨ÁªÏµÈË
 void DelContact(Contact* pc)
 {
-	char name[NAME_MAX];
-	assert(pc);
-	if (pc->sz == 0)//ÏÈÒª¿´Í¨Ñ¶Â¼ÊÇ·ñÎª¿Õ
-	{
-		printf("Í¨Ñ¶Â¼Îª¿Õ£¬ÎŞ·¨É¾³ı\n");
-		return;
-	}
-	printf("ÇëÊäÈëÒªÉ¾³ıÈËµÄÃû×Ö£º");
-	scanf("%s", name);
-	int ret = FindByName(pc, name);//·µ»Ø²éÕÒº¯Êı
-	if (ret == -1)
-	{
-		printf("ÒªÉ¾³ıµÄÈË²»´æÔÚ\n");
-		return;
-	}
-	int i = 0;
-	for (i = ret; i < pc->sz - 1; i++)
-	{
-		pc->data[i] = pc->data[i + 1];
-	}
-	pc->sz--;
-	printf("É¾³ı³É¹¦\n");
+    char name[NAME_MAX];
+    assert(pc);
+    if (pc->sz == 0)
+    {
+        printf("The address book is empty, nothing to delete.\n");
+        return;
+    }
+    printf("Please enter the name of the person to be deletedï¼š");
+    scanf("%s", name);
+    int ret = FindByName(pc, name);
+    if (ret == -1)
+    {
+        printf("The person to be deleted does not exist.\n");
+        return;
+    }
+    int i = 0;
+    for (i = ret; i < pc->sz - 1; i++)
+    {
+        pc->data[i] = pc->data[i + 1];
+    }
+    pc->sz--;
+    printf("Deletion successful.\n");
 }
-//²éÕÒÁªÏµÈË
 void SearchContact(Contact* pc)
 {
-	char name[NAME_MAX];
-	assert(pc);
-	printf("ÇëÊäÈëÒª²éÕÒÈËµÄÃû×Ö£º");
-	scanf("%s", name);
-	int ret = FindByName(pc, name);
-	if (ret == -1)
-	{
-		printf("Òª²éÕÒµÄÈË²»´æÔÚ\n");
-		return;
-	}
-	printf("%-20s%-5s%-5s%-12s%-30s%\n", "Ãû×Ö", "ÄêÁä", "ĞÔ±ğ", "µç»°", "µØÖ·");
-	printf("%-20s%-5d%-5s%-12s%-30s%\n", pc->data[ret].name, pc->data[ret].age, pc->data[ret].sex, pc->data[ret].tele, pc->data[ret].addr);
+    char name[NAME_MAX];
+    assert(pc);
+    printf("Please enter the name of the person you are looking forï¼š");
+    scanf("%s", name);
+    int ret = FindByName(pc, name);
+    if (ret == -1)
+    {
+        printf("The person you are looking for does not exist.\n");
+        return;
+    }
+    printf("%-20s%-5s%-5s%-12s%-30s%\n", "name", "age", "gender", "phone number", "address");
+    printf("%-20s%-5d%-5s%-12s%-30s%\n", pc->data[ret].name, pc->data[ret].age, pc->data[ret].sex, pc->data[ret].tele, pc->data[ret].addr);
 }
-//ĞŞ¸ÄÁªÏµÈË
 void ModifyContact(Contact* pc)
 {
-	char name[NAME_MAX];
-	assert(pc);
-	printf("ÇëÊäÈëÒªĞŞ¸ÄÈËµÄÃû×Ö£º");
-	scanf("%s", name);
-	int ret = FindByName(pc, name);
-	if (ret == -1)
-	{
-		printf("ÒªĞŞ¸ÄµÄÈË²»´æÔÚ\n");
-		return;
-	}
-	printf("ÇëÊäÈëÃû×Ö£º");
-	scanf("%s", pc->data[ret].name);
-	printf("ÇëÊäÈëÄêÁä£º");
-	scanf("%d", &(pc->data[pc->sz].age));
-	printf("ÇëÊäÈëĞÔ±ğ£º");
-	scanf("%s", pc->data[ret].sex);
-	printf("ÇëÊäÈëµç»°£º");
-	scanf("%s", pc->data[ret].tele);
-	printf("ÇëÊäÈëµØÖ·£º");
-	scanf("%s", pc->data[ret].addr);
-	printf("ĞŞ¸Ä³É¹¦\n");
+    int sign = 1;
+    char name[NAME_MAX];
+    assert(pc);
+    printf("Please enter the name of the person you wish to modifyï¼š");
+    scanf("%s", name);
+    int ret = FindByName(pc, name);
+    if (ret == -1)
+    {
+        printf("The person you wish to modify does not exist.\n");
+        return;
+    }
+    while (sign) {
+        printf("The data you want to change is:\n");
+        printf("1.name                                2.age\n");
+        printf("3.gender                              4.phone number\n");
+        printf("5.address                             0.close\n");
+        scanf("%d", &sign);
+        if (sign == 1) {
+            printf("Please enter the nameï¼š");
+            scanf("%s", pc->data[ret].name);
+            continue;
+        }
+        else if (sign == 2) {
+            printf("Please enter the ageï¼š");
+            scanf("%d", &(pc->data[pc->sz].age));
+            continue;
+        }
+        else if (sign == 3) {
+            printf("Please enter the genderï¼š");
+            scanf("%s", pc->data[ret].sex);
+            continue;
+        }
+        else if (sign == 4) {
+            printf("Please enter the phone numberï¼š");
+            scanf("%s", pc->data[ret].tele);
+            continue;
+        }
+        else if (sign == 5) {
+            printf("Please enter the addressï¼š");
+            scanf("%s", pc->data[ret].addr);
+            continue;
+        }
+        else if (sign == 0) {
+            break;
+        }
+        else {
+            printf("Input Error");
+            continue;
+        }
+    }
+    printf("Modification Successful\n");
 }
-//Çå¿ÕËùÓĞÁªÏµÈË
 void QingContact(Contact* pc)
 {
-	char name[NAME_MAX];
-	assert(pc);
-	if (pc->sz == 0)
-	{
-		printf("Í¨Ñ¶Â¼Îª¿Õ£¬ÎŞ·¨É¾³ı\n");
-		return;
-	}
-	pc->sz = 0;
-	memset(pc->data, 0, sizeof(pc->data));
-	printf("É¾³ı³É¹¦\n");
+    char name[NAME_MAX];
+    assert(pc);
+    if (pc->sz == 0)
+    {
+        printf("The contact list is empty, deletion is not possible.\n");
+        return;
+    }
+    pc->sz = 0;
+    memset(pc->data, 0, sizeof(pc->data));
+    printf("Deletion Successful.\n");
 
 }
-//ÅÅĞòËùÓĞÈË
 int cmp_s(const void* elem1, const void* elem2)
 {
-	return strcmp((char*)elem1, (char*)elem2);
+    return strcmp((char*)elem1, (char*)elem2);
 }
 void PaiContact(Contact* pc)
 {
-	assert(pc);
-	qsort(pc, pc->sz, sizeof(pc->data[0]), cmp_s);
-	int i = 0;
-	printf("%-20s%-5s%-5s%-12s%-30s%\n", "Ãû×Ö", "ÄêÁä", "ĞÔ±ğ", "µç»°", "µØÖ·");
-	for (i = 0; i < pc->sz; i++)
-	{
-		printf("%-20s%-5d%-5s%-12s%-30s%\n",
-			pc->data[i].name, pc->data[i].age, pc->data[i].sex, pc->data[i].tele, pc->data[i].addr);
-	}
+    assert(pc);
+    qsort(pc, pc->sz, sizeof(pc->data[0]), cmp_s);
+    int i = 0;
+    printf("%-20s%-5s%-5s%-12s%-30s%\n", "name", "age", "gender", "phone number", "address");
+    for (i = 0; i < pc->sz; i++)
+    {
+        printf("%-20s%-5d%-5s%-12s%-30s%\n",
+            pc->data[i].name, pc->data[i].age, pc->data[i].sex, pc->data[i].tele, pc->data[i].addr);
+    }
+}
+void SaveContactsToFile(Contact* pc, const char* filename) {
+    assert(pc);
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        printf("Error opening file for writing.\n");
+        return;
+    }
+    for (int i = 0; i < pc->sz; i++) {
+        fprintf(file, "%s %d %s %s %s\n",
+            pc->data[i].name,
+            pc->data[i].age,
+            pc->data[i].sex,
+            pc->data[i].tele,
+            pc->data[i].addr);
+    }
+    fclose(file);
+    printf("Contacts saved successfully to %s.\n", filename);
+}
+void LoadContactsFromFile(Contact* pc, const char* filename) {
+    assert(pc);
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Error opening file for reading.\n");
+        return;
+    }
+    pc->sz = 0;
+    while (fscanf(file, "%s %d %s %s %s",
+        pc->data[pc->sz].name,
+        &pc->data[pc->sz].age,
+        pc->data[pc->sz].sex,
+        pc->data[pc->sz].tele,
+        pc->data[pc->sz].addr) != EOF) {
+        pc->sz++;
+        if (pc->sz >= MAX) {
+            printf("Maximum number of contacts reached.\n");
+            break;
+        }
+    }
+    fclose(file);
+    printf("Contacts loaded successfully from %s.\n", filename);
 }
