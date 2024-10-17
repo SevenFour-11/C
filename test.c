@@ -1,18 +1,20 @@
-#define _CRT_SECURE_NO_WARNINGS 1  //½ûÓÃvsµÄ°²È«ĞÔ¾¯¸æ
-#include "game.h"  
-void nume()  //²Ëµ¥ÏÔÊ¾º¯Êı
+#define _CRT_SECURE_NO_WARNINGS 1
+#include "game.h" 
+void nume()
 {
 	printf("*******************************\n");
-	printf("*****   Í¨Ñ¶Â¼¹ÜÀíÏµÍ³   ******\n");
-	printf("***  1.add          2.del  ****\n");//Ôö¼ÓºÍÉ¾³ıÖ¸¶¨ÁªÏµÈË
-	printf("***  3.search       4.modify***\n");//²éÕÒºÍĞŞ¸ÄÖ¸¶¨ÁªÏµÈË
-	printf("***  5.show         6.sort ****\n");//ÏÔÊ¾ºÍÅÅĞòËùÓĞÁªÏµÈË
-	printf("***  7.empty        0.exit ****\n");//Çå³ıËùÓĞÁªÏµÈË£¬ºÍÍË³ö³ÌĞò
+	printf("    Contact Management System  \n");
+	printf("***  1.add          2.del  ****\n");
+	printf("***  3.search       4.modify***\n");
+	printf("***  5.show         6.sort ****\n");
+	printf("***  7.empty        0.exit ****\n");
+	printf("***  8.Save Contacts to File **\n");
+	printf("***  9.Load Contacts from File \n");
 	printf("*******************************\n");
 }
-enum Option  //Ã¶¾Ù
+enum Option 
 {
-	EXIT,  //Ã¶¾ÙÖµÄ¬ÈÏ´Ó0¿ªÊ¼
+	EXIT, 
 	ADD,
 	DEL,
 	SEARCH,
@@ -20,16 +22,19 @@ enum Option  //Ã¶¾Ù
 	SHOW,
 	SORT,
 	EMPTY,
+	SAVE,
+	LOAD,
 };
 int main()
 {
-	int input = 0;  //´æ´¢ÓÃ»§Ñ¡Ôñ
-	Contact con;  //´æ´¢Í¨Ñ¶Â¼Êı¾İ
-	InitContact(&con);  //º¯Êı³õÊ¼»¯Í¨Ñ¶Â¼
+	int input = 0; 
+	Contact con; 
+	const char* filename = "contacts.txt";
+	InitContact(&con);
 	do
 	{
-		nume();  //numeº¯ÊıÏÔÊ¾²Ëµ¥
-		printf("ÇëÊäÈëÄãµÄÑ¡Ôñ£º");
+		nume();
+		printf("Please enter your choicï¼š");
 		scanf("%d", &input);
 		switch (input)
 		{
@@ -54,6 +59,11 @@ int main()
 		case EMPTY:
 			QingContact(&con);
 			break;
+		case SAVE:
+			SaveContactsToFile(&con, filename);
+			break;
+		case LOAD:
+			LoadContactsFromFile(&con, filename);
 		default:
 			break;
 		}
